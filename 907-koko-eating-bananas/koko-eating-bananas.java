@@ -10,14 +10,15 @@ class Solution {
         while(l <= r){
             int mid = l + (r - l) / 2;
             //Since h can be up to and the number of piles can be large we can overflow so we use long
-            int hoursTotal = 0;
+            long hoursTotal = 0;
 
             for(int i = 0; i < piles.length; i++){
                 // If the pile has less than k bananas, finish eating but not eat from another pile in the same hour
-                hoursTotal += Math.ceil((piles[i] + mid - 1) / mid); 
+                hoursTotal += (piles[i] + mid - 1) / mid; 
+                if (hoursTotal > h) break;
             }
             if(hoursTotal <= h){
-                min = Math.min(mid, min);
+                min = mid;
                 r = mid - 1;
             } else{
                 l = mid + 1;
