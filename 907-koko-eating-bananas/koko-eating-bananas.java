@@ -14,7 +14,7 @@ class Solution {
 
             for(int i = 0; i < piles.length; i++){
                 // If the pile has less than k bananas, finish eating but not eat from another pile in the same hour
-                hoursTotal += (piles[i] + mid - 1) / mid; 
+                hoursTotal += (piles[i] + mid - 1) / mid; //standard integer ceiling division
                 if (hoursTotal > h) break;
             }
             if(hoursTotal <= h){
