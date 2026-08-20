@@ -1,0 +1,50 @@
+class Solution {
+    Map<Character, Set<Character>> map = new HashMap<>();
+    int[] vis = new int[26];
+    StringBuilder res = new StringBuilder();
+    public String foreignDictionary(String[] words) {
+        int n = words.length;
+        if(n == 0) return "";
+      for(int i = 0; i < n; i++){
+        for(int j = 0; j < words[i].length(); j++){
+            // populate initial value entries, we can encounter same char multiple times so use putIfAbsent
+            map.putIfAbsent(words[i].charAt(j), new HashSet<>());
+        }
+      }
+
+      for(int i = 1; i < n; i++){
+        int l1 = words[i].length();
+        int l2 = words[i - 1].length();
+        int minL = Math.min(l1, l2);
+        if(l2 > l1 && words[i].substring(0, minL).equals(words[i - 1].substring(0, minL))){ //check lenghth, if longer string with the same prefix appears earlier than words is incorrect
+            return "";
+        }
+        for(int j = 0; j < minL; j++){
+            if(words[i - 1].charAt(j) != words[i].charAt(j)){
+                map.get(words[i - 1].charAt(j)).add(words[i].charAt(j));
+                break; //exit when we hit first diff character
+            }
+        }
+      }
+        for(char c : map.keySet()){
+            if(dfs(c)) return "";
+        }
+        return res.reverse().toString();
+    }
+
+    private boolean dfs(char c){
+        if(vis[c - 'a'] == 1){ //cycle detection
+            return true;
+        }
+        if(vis[c - 'a'] == 2) return false; //already processed
+        vis[c - 'a'] = 1;
+        for(char nei : map.get(c)){
+            if(dfs(nei)){
+                return true;
+            }
+        }
+        vis[c - 'a'] = 2;
+        res.append(c);
+        return false;
+    }
+}
