@@ -1,0 +1,30 @@
+class Solution { Union find solution coming soon
+    List<List<Integer>> adj = new ArrayList<>();
+    public int countComponents(int n, int[][] edges) {
+        for(int i = 0; i < n; i++){
+            adj.add(new ArrayList<>());
+        }
+        for(int[] pre : edges){
+            adj.get(pre[0]).add(pre[1]);
+            adj.get(pre[1]).add(pre[0]);
+        }
+        int[] vis = new int[n];
+        int count = 0;
+        for(int i = 0; i < n; i++){
+            if(vis[i] == 0){
+                count++;
+                dfs(i, vis);
+            }
+        }
+        return count;
+    }
+
+    private void dfs(int i, int[] vis){
+        if(vis[i] == 1) return;
+        vis[i] = 1;
+        for(int nei : adj.get(i)){
+            dfs(nei, vis);
+        }
+        return;
+    }
+}
