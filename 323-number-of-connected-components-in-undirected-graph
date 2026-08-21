@@ -1,4 +1,73 @@
-class Solution { Union find solution coming soon
+//USING Union Find with path compression optimization
+class UF{
+    int[] parent;
+    int[] rank;
+    
+    public UF(int n){
+        parent = new int[n];
+        rank = new int[n];
+
+        //every node is a parent of itself
+        for(int i = 0; i < n; i++){
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    public int find(int node){
+        int curr = node;
+        // climb up the tree until we find the parent node of the entire set
+        while(curr != parent[curr]){
+            parent[curr] = parent[parent[curr]]; //rewires the tree
+            curr = parent[curr];
+        }
+        return curr;
+    }
+
+    public boolean union(int n1, int n2){
+        int pn1 = find(n1);
+        int pn2 = find(n2);
+        if(pn1 == pn2){ //already connected
+            return false;
+        }
+
+        //ensure we always connect to the bigger set
+        if(rank[pn2] > rank[pn1]){
+            int temp = pn2;
+            pn2 = pn1;
+            pn1 = temp;
+        }
+
+        //connect to the bigger set
+        parent[pn2] = pn1;
+        rank[pn1] += rank[pn2];
+        return true; 
+    }
+}
+
+class Solution {
+    public int countComponents(int n, int[][] edges) {
+        UF disjointSet = new UF(n);
+        int res = n;
+
+        // we scan through the given edges connecting the nodes that have edges
+        // if there is no edge connecting two nodes we simply don't subtract from n
+
+        // we start with an "unconnected forest" of nodes so no nodes are considered to be connected before we start iterating
+        for(int[] edge : edges){
+            if(disjointSet.union(edge[0], edge[1])){
+                res--;
+            }
+        }
+        return res;
+    }
+}
+
+
+
+
+//USING DFS
+class Solution {
     List<List<Integer>> adj = new ArrayList<>();
     public int countComponents(int n, int[][] edges) {
         for(int i = 0; i < n; i++){
