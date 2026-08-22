@@ -1,4 +1,4 @@
-class Solution {
+class Solution { //DP solution
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>>[] dp = new ArrayList[target+1];
         for(int i = 0; i <= target; i++){
