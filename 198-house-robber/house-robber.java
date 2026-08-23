@@ -3,14 +3,14 @@ class Solution {
     public int rob(int[] nums) {
         if(nums.length == 1) return nums[0];
         int n = nums.length;
-        int[] dp = new int[n + 1];
-        dp[0] = 0; // robbed 0 houses -> 0 money
-        dp[1] = nums[0];
+        int rob1 = 0, rob2 = 0;
         
-        for(int i = 1; i < n; i++){
+        for(int i = 0; i < n; i++){
             //rob curr or skip
-            dp[i + 1] = Math.max(dp[i], dp[i - 1] + nums[i]);
+            int newRob = Math.max(rob2, rob1 + nums[i]);
+            rob1 = rob2;
+            rob2 = newRob;
         }
-        return dp[n];
+        return rob2;
     }
 }
