@@ -1,4 +1,5 @@
 // House robber serves as almost like a template DP problem
+// Version with a O(1) memory optimization by using variables instead of an array
 class Solution { 
     public int rob(int[] nums) {
         if(nums.length == 1) return nums[0];
