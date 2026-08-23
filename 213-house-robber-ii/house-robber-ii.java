@@ -1,5 +1,6 @@
-class Solution {
+class Solution { // DP with O(1) memory optimization
     public int rob(int[] nums) {
+        // no need for circular array approach -> we just check what is max if we rob nums[0] and what is max if we don't rob nums[0];
         return Math.max(comp(nums, 0, nums.length - 1), comp(nums, 1, nums.length));
     }
 
