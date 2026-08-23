@@ -7,6 +7,7 @@ class Solution {
 
         for(String w : wordList){
             for(int j = 0; j < len; j++){
+                // create pattern and use it as key
                 String pattern = w.substring(0, j) + "*" + w.substring(j+1);
                 adj.computeIfAbsent(pattern, k -> new ArrayList<>()).add(w);
             }
