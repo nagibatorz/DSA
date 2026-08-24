@@ -1,3 +1,4 @@
+// I used hashmap but the solution can be optimized by using character frequency array
 class Solution {
     public String minWindow(String s, String t) {
         if(s == null || t == null || s.isEmpty() || t.isEmpty() || s.length() < t.length()) return "";
