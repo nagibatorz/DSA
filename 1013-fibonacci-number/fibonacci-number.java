@@ -1,4 +1,5 @@
-class Solution { 
+// Dynamic Programming Tabulation approach with optimized space complexity due to using two variables to keep track of the sum instead of memo array.
+class Solution {
     public int fib(int n) {
         if(n == 0) return 0;
         int first = 0;
