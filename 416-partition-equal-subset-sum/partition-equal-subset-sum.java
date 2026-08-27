@@ -14,6 +14,10 @@ class Solution {
             for(int j = target; j >= num; j--){
                 //check is sum of j can be computed if not check if j-num could be computed
                 dp[j] = dp[j] || dp[j - num];
+                // early return if we have found sum / 2
+                if(dp[target]){
+                    return true;
+                }
             }
         }
 
