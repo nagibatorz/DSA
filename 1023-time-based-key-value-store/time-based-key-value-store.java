@@ -21,6 +21,8 @@ class TimeMap {
         String res = "";
         List<Pair> list = map.get(key);
         int size = list.size();
+
+        //check if last ts is less than timestamp
         if(timestamp >= list.get(size - 1).ts){
             return list.get(size - 1).val;
         }
