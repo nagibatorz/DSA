@@ -6,16 +6,16 @@ class Solution {
         int trappedWater = 0;
         while(l < r){
 
-            rightMax = Math.max(rightMax, height[r]);
-            leftMax = Math.max(leftMax, height[l]);
             
-            if(leftMax > rightMax){
-                
+            
+            
+            if(height[l] > height[r]){
+                rightMax = Math.max(rightMax, height[r]);
                 int water = rightMax - height[r];
                 trappedWater += water;
                 r--;
             } else{
-                
+                leftMax = Math.max(leftMax, height[l]);
                 int water = leftMax - height[l];
                 trappedWater += water;
                 l++;
