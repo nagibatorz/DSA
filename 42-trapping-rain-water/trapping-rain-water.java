@@ -1,22 +1,29 @@
+// Two pointers
 class Solution {
     public int trap(int[] height) {
-        int n = height.length;
-        int l = 0, r = n - 1;
-        int leftMax = height[0], rightMax = height[n-1];
+        int l = 0, r = height.length - 1;
+        int leftMax = 0, rightMax = height[r];
         int trappedWater = 0;
-        while(l < r){
+        
+        while (l < r) {
 
-            // We need to find the bottleneck side -> find how much water will be trapped
-            if(height[l] > height[r]){
-                rightMax = Math.max(rightMax, height[r]);
-                int water = rightMax - height[r];
-                trappedWater += water;
-                r--;
-            } else{
-                leftMax = Math.max(leftMax, height[l]);
-                int water = leftMax - height[l];
-                trappedWater += water;
+            // We need to find bottleneck side -> compute how much water is trapped at that smaller side
+
+            if (height[l] <= height[r]) {
+                // minimize number of Math.max operations
+                if (height[l] >= leftMax) {
+                    leftMax = height[l]; // Update max
+                } else {
+                    trappedWater += leftMax - height[l]; // Trap water
+                }
                 l++;
+            } else {
+                if (height[r] >= rightMax) {
+                    rightMax = height[r]; // Update max
+                } else {
+                    trappedWater += rightMax - height[r]; // Trap water
+                }
+                r--;
             }
         }
         return trappedWater;
