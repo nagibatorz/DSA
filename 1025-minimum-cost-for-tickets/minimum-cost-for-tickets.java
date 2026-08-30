@@ -1,23 +1,32 @@
 class Solution {
     public int mincostTickets(int[] days, int[] costs) {
-        int n = days.length;
-        //dp[n] = 0 - base case
-        int[] dp = new int[n+1];
-        int[] passes = new int[]{1, 7, 30};
-        for(int i = n - 1; i >= 0; i--){
-            dp[i] = Integer.MAX_VALUE;
-            int idx = 0, j = i;
-            for(int pass : passes){
-                while(j < n && days[j] < days[i] + pass){
-                    j++;
-                }
-                //compare current spent with future day spent
-                // costs[idx] + dp[j] - check the price at the day when our pass ends
-                dp[i] = Math.min(dp[i], costs[idx] + dp[j]);
-                // navigate within costs array
-                idx++;
-            }
-        }
-        return dp[0];
+    // Get the very last day we are traveling
+    int lastDay = days[days.length - 1];
+    
+    // Fast O(1) lookup to check if a calendar day is a travel day
+    boolean[] isTravelDay = new boolean[lastDay + 1];
+    for (int day : days) {
+        isTravelDay[day] = true;
     }
+
+    // dp[i] will store the minimum cost to travel up to calendar day i
+    int[] dp = new int[lastDay + 1];
+
+    for (int i = 1; i <= lastDay; i++) {
+        // If we aren't traveling today, the cost is exactly the same as yesterday
+        if (!isTravelDay[i]) {
+            dp[i] = dp[i - 1];
+            continue;
+        }
+
+        // Compare buying a 1, 7, or 30 day pass ending on day i
+        int cost1  = dp[i - 1] + costs[0];
+        int cost7  = dp[Math.max(0, i - 7)] + costs[1];
+        int cost30 = dp[Math.max(0, i - 30)] + costs[2];
+
+        dp[i] = Math.min(cost1, Math.min(cost7, cost30));
+    }
+
+    return dp[lastDay];
+}
 }
