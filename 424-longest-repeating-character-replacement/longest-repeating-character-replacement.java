@@ -5,12 +5,13 @@ class Solution {
         int maxF = 0;
         int res = 0;
         for(int r = 0; r < s.length(); r++){
-            if(!map.containsKey(s.charAt(r))){
-                map.put(s.charAt(r), 1);
+            char c = s.charAt(r);
+            if(!map.containsKey(c)){
+                map.put(c, 1);
                 maxF = Math.max(1, maxF);
             } else{
-                int count = map.get(s.charAt(r)) + 1;
-                map.put(s.charAt(r), count);
+                int count = map.get(c) + 1;
+                map.put(c, count);
                 maxF = Math.max(count, maxF);
             }
             if((r - l + 1) - maxF > k){
