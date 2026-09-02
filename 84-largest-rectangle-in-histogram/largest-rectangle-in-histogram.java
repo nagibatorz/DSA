@@ -1,22 +1,26 @@
 class Solution {
     public int largestRectangleArea(int[] heights) {
-        Deque<int[]> st = new ArrayDeque<>();
         int n = heights.length;
+        Deque<int[]> st = new ArrayDeque<>();
         int max = 0;
-        for(int i = 0; i < heights.length; i++){
+
+        for(int i = 0; i < n; i++){
             int start = i;
-            while(!st.isEmpty() && heights[i] < st.peek()[1]){
+
+            while(!st.isEmpty() && heights[i] < st.peek()[0]){
                 int[] curr = st.pop();
-                max = Math.max(max, curr[1] * (i - curr[0]));
-                start = curr[0];
+                // get area of the rectangle from i to the rectangles index
+                max = Math.max(max, curr[0] * (i - curr[1]));
+                // extend the rectabgle to the left
+                start = curr[1];
             }
-            st.push(new int[]{start, heights[i]});
+            st.push(new int[]{heights[i], start});
         }
-        while(!st.isEmpty()){
-            int[] curr = st.pop();
-            max = Math.max(max, curr[1] * (n - curr[0]));
+        for(int[] curr : st){
+
+            //get area of the rectangles remaining and extend right
+            max = Math.max(max, curr[0] * (n - curr[1]));
         }
         return max;
-
     }
 }
