@@ -1,3 +1,4 @@
+// DP Tabulation approach
 class Solution {
     public int minDistance(String word1, String word2) {
         if(word1.equals(word2)) return 0;
@@ -22,7 +23,7 @@ class Solution {
                 if(carr1[i-1] == carr2[j-1]){ // Reuse the previous string - char is the same
                     dp[i][j] = dp[i-1][j-1];
                 } else{ // Pick the most efficient operation
-                    dp[i][j] = Math.min(dp[i-1][j-1] + 1, Math.min(dp[i-1][j] + 1, dp[i][j-1] +1));
+                    dp[i][j] = 1+ Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1]));
                 }
             }
         }
