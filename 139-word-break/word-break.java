@@ -25,18 +25,17 @@ class Solution {
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
         Map<String, Boolean> memo = new HashMap<>();
-        return dp(s, wordDict, memo);
+        return dp(memo, s, wordDict);
     }
 
-    private boolean dp(String s, List<String> wordDict, Map<String, Boolean> memo){
+    private boolean dp(Map<String, Boolean> memo, String s, List<String> wordDict){
         if(s.length() == 0) return true;
-        // check if the answer was previously computed
         if(memo.containsKey(s)) return memo.get(s);
-        for(String word : wordDict){
-            if(s.indexOf(word) == 0){ //check if word is a prefix of s
-                // recurse on the rest
-                String suffix = s.substring(word.length()); 
-                if(dp(suffix, wordDict, memo)){
+
+        for(String w : wordDict){
+            if(s.indexOf(w) == 0){
+                String suffix = s.substring(w.length());
+                if (dp(memo, suffix, wordDict)) {
                     memo.put(s, true);
                     return true;
                 }
@@ -45,5 +44,7 @@ class Solution {
         memo.put(s, false);
         return false;
     }
+
+    
 }
 
