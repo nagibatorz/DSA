@@ -43,6 +43,8 @@ class Solution {
                 }
             }
         }
+
+        //memoize false if we exhausted all words in wordDict
         memo.put(s, false);
         return false;
     }  
