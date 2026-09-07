@@ -33,9 +33,11 @@ class Solution {
         if(memo.containsKey(s)) return memo.get(s);
 
         for(String w : wordDict){
-            if(s.indexOf(w) == 0){
+            if(s.indexOf(w) == 0){ //check if word is in s
+
+                //recurse on suffix
                 String suffix = s.substring(w.length());
-                if (dp(memo, suffix, wordDict)) {
+                if (dp(memo, suffix, wordDict)) { //whether a string can be broken apart using any word
                     memo.put(s, true);
                     return true;
                 }
@@ -43,8 +45,6 @@ class Solution {
         }
         memo.put(s, false);
         return false;
-    }
-
-    
+    }  
 }
 
