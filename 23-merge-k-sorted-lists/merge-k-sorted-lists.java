@@ -9,17 +9,28 @@
  * }
  */
 
+
+// Iterative divide and conquer approach
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         // handle 0 and 1 list case
         if(lists.length == 0) return null;
         if(lists.length == 1) return lists[0];
 
-        // merge the lists where lists[i] will hold the result of merging all lists up to i
-        for(int i = 1; i < lists.length; i++){
-            lists[i] = merge(lists[i - 1], lists[i]);
+
+        while(lists.length > 1){
+            List<ListNode> merged = new ArrayList<>();
+            // merge 2 lists at a time
+            for(int i = 0; i < lists.length; i+=2){
+                ListNode l1 = lists[i];
+                ListNode l2 = (i + 1 < lists.length) ? lists[i+1] : null;
+                merged.add(merge(l1, l2));
+            }
+            // converty to an array with dummy node
+            lists = merged.toArray(new ListNode[0]);
         }
-        return lists[lists.length - 1];
+
+        return lists[0];
     }
 
 
