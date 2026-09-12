@@ -9,6 +9,7 @@
  * }
  */
 
+// Approach: find Kth node and reverse that portion -> make sure we don't lose pointers -> move onto the next group -> exit when a group has less than k nodes
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         //initialize dummy because head of the LinkedList will be modified
