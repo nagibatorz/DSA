@@ -12,7 +12,7 @@ class Solution {
                 j++;
             }
 
-            // 2. Both reached the end simultaneously -> valid match
+            // 2. Both reached the end simultaneously and didnt hit any later if statements -> valid match
             if (i == n && j == n) {
                 return true;
             }
@@ -28,15 +28,16 @@ class Solution {
             }
 
             // 5. Check directional movement rules
-            // 'L' can only move left (start index >= target index)
+            // 'L' can only move left , so when start has left earlier than target -> invalid
             if (start.charAt(i) == 'L' && i < j) {
                 return false;
             }
-            // 'R' can only move right (start index <= target index)
+            // 'R' can only move right, so when start has R later than target -> invalid
             if (start.charAt(i) == 'R' && i > j) {
                 return false;
             }
 
+            // increment pointers
             i++;
             j++;
         }
