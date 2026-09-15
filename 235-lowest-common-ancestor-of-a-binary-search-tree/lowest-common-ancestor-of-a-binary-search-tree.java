@@ -7,16 +7,7 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
-
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
+ // if root is between p and q -> it is the common ancestor
 class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         if(root == null || q == null || p == null) return null;
