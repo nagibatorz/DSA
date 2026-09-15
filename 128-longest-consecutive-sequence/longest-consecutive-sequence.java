@@ -1,3 +1,4 @@
+// O(nlogn) because of sorting but gets faster time on leetcode
 class Solution {
     public int longestConsecutive(int[] nums) {
         if(nums.length == 0) return 0;
@@ -14,6 +15,8 @@ class Solution {
                 curr = nums[i];
                 streak = 0;
             }
+
+            //skip duplicates
             while(i < n && nums[i] == curr){
                 i++;
             }
