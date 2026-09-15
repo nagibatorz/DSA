@@ -8,14 +8,17 @@ class Solution {
             arr[i][0] = position[i];
             arr[i][1] = speed[i];
         }
+
+        // sort based on position and iterate starting from the farthest
         Arrays.sort(arr, (a, b) -> Integer.compare(a[0], b[0]));
-        st.push((double)(target - arr[n-1][0]) / arr[n-1][1]);
-        for(int i = n - 2; i >= 0; i--){
+        for(int i = n - 1; i >= 0; i--){
             double time = (double) (target - arr[i][0]) / arr[i][1];
-            if(!st.isEmpty() && st.peek() < time){
+            if(st.isEmpty() || st.peek() < time){ //push on the stack if not a fleet
                 st.push(time);
             }
         }
+
+        //stack has the number of fleets
         return st.size();
     }
 }
