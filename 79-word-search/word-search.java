@@ -1,14 +1,12 @@
 class Solution {
-    int[][] directions = new int[][]{{1, 0},{0, 1},{-1, 0},{0, -1}};
     public boolean exist(char[][] board, String word) {
         int n = board.length, m = board[0].length, len = word.length();
         if(n == 0 || m == 0) return false;
         if(word.equals("")) return true;
-        
-        boolean[][] vis = new boolean[n][m];
+        char[] wordC = word.toCharArray();
         for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
-                if(board[i][j] == word.charAt(0) && dfs(i, j, n, m, board, vis, word, 0, len)){
+                if(board[i][j] == wordC[0] && dfs(i, j, n, m, board, wordC, 0, len)){
                     return true;
                 }
             }
@@ -16,23 +14,26 @@ class Solution {
         return false;
     }
 
-    private boolean dfs(int i, int j, int n, int m, char[][] board, boolean[][] vis, String word, int idx, int len){
-        if(i >= n || i < 0 || j >= m || j < 0 || vis[i][j] || board[i][j] != word.charAt(idx)){
+    private boolean dfs(int i, int j, int n, int m, char[][] board, char[] wordC, int idx, int len){
+        if(i >= n || i < 0 || j >= m || j < 0 || board[i][j] != wordC[idx]){
             return false;
         }
         if(idx == len - 1){
             return true;
         }
-        vis[i][j] = true;
         char curr = board[i][j];
-        for(int[] direction : directions){
-            int newR = i + direction[0], newC = j + direction[1];
-            if (dfs(newR, newC, n, m, board, vis, word, idx + 1, len)) {
-                return true;
-            }
+        int newIdx = idx + 1;
+        board[i][j] = '#';
 
+        if (dfs(i + 1, j, n, m, board, wordC, newIdx, len) || 
+            dfs(i, j + 1, n, m, board, wordC, newIdx, len) ||
+            dfs(i - 1, j, n, m, board, wordC, newIdx, len) ||
+            dfs(i, j - 1, n, m, board, wordC, newIdx, len)) {
+            board[i][j] = curr;
+            return true;
         }
-        vis[i][j] = false;
+
+        board[i][j] = curr;
         return false;
     }
 }
