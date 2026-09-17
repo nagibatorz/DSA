@@ -1,37 +1,62 @@
 class Solution {
-    public int getMaximumGold(int[][] grid) {
-        if(grid.length == 0) return 0;
-        int n = grid.length, m = grid[0].length;
+    private int[][] goldId;
+    private int goldCount;
+    private Map<Integer, Integer>[] memo;
+    private int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-        boolean[][] vis = new boolean[n][m];
-        // boolean[][] done = new boolean[n][m];
-        int max = 0;
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < m; j++){
-                if(grid[i][j] > 0){
-                    max = Math.max(max, dfs(i, j, n, m, grid, vis));
+    public int getMaximumGold(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        goldId = new int[m][n];
+        goldCount = 0;
+
+        // Assign an ID from 0 to K-1 for every cell with gold
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] > 0) {
+                    goldId[i][j] = goldCount++;
+                } else {
+                    goldId[i][j] = -1;
                 }
             }
         }
-        return max;
+
+        memo = new HashMap[goldCount];
+        for (int i = 0; i < goldCount; i++) {
+            memo[i] = new HashMap<>();
+        }
+
+        int maxGold = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] > 0) {
+                    int id = goldId[i][j];
+                    maxGold = Math.max(maxGold, dfs(grid, i, j, 1 << id));
+                }
+            }
+        }
+
+        return maxGold;
     }
 
+    private int dfs(int[][] grid, int r, int c, int mask) {
+        int id = goldId[r][c];
+        if (memo[id].containsKey(mask)) {
+            return memo[id].get(mask);
+        }
 
-    private int dfs(int i, int j, int n, int m, int[][] grid, boolean[][] vis){
-        if(i >= n || i < 0 || j >= m || j < 0 || vis[i][j] || grid[i][j] == 0){
-            return 0;
+        int bestNeighbor = 0;
+        for (int[] d : dirs) {
+            int nr = r + d[0], nc = c + d[1];
+            if (nr >= 0 && nr < grid.length && nc >= 0 && nc < grid[0].length && grid[nr][nc] > 0) {
+                int nextId = goldId[nr][nc];
+                if ((mask & (1 << nextId)) == 0) {
+                    bestNeighbor = Math.max(bestNeighbor, dfs(grid, nr, nc, mask | (1 << nextId)));
+                }
+            }
         }
-        vis[i][j] = true;
-        int[] directions = new int[4];
-        directions[0] = dfs(i, j + 1, n, m, grid, vis);
-        directions[1] = dfs(i, j - 1, n, m, grid, vis);
-        directions[2] = dfs(i + 1, j, n, m, grid, vis);
-        directions[3] = dfs(i - 1, j, n, m, grid, vis);
-        vis[i][j] = false;
-        int max = 0;
-        for(int k = 0; k < 4; k++){
-            max = Math.max(max, directions[k]);
-        }
-        return max + grid[i][j];
+
+        int total = grid[r][c] + bestNeighbor;
+        memo[id].put(mask, total);
+        return total;
     }
 }
