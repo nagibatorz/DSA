@@ -23,7 +23,7 @@ class Solution {
 
     public int pickIndex() {
         // pick a probability -> run binary search and find a probability that it falls under
-        double chance = rand.nextDouble();
+        double chance = rand.nextDouble(); // [0.0, 1.0] by default
         int l = 0, r = weights.length - 1;
         int mid = 0;
         while(l < r){
