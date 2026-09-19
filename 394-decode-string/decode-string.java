@@ -1,10 +1,10 @@
 class Solution {
     public String decodeString(String s) {
         Deque<Integer> counts = new ArrayDeque<>();
-        Deque<String> results = new ArrayDeque<>();
+        Deque<StringBuilder> results = new ArrayDeque<>();
 
         int idx = 0;
-        String res = "";
+        StringBuilder res = new StringBuilder();
 
         while(idx < s.length()){
             char c = s.charAt(idx);
@@ -17,7 +17,7 @@ class Solution {
                 counts.push(count);
             } else if(c == '['){
                 results.push(res);
-                res = "";
+                res = new StringBuilder();
                 idx++;
             } else if(c == ']'){
                 StringBuilder sb = new StringBuilder(results.pop());
@@ -25,13 +25,13 @@ class Solution {
                 for(int i = 0; i < count; i++){
                     sb.append(res);
                 }
-                res = sb.toString();
+                res = sb;
                 idx++;
             } else{
-                res += c;
+                res.append(c);
                 idx++;
             }
         }
-        return res;
+        return res.toString();
     }
 }
