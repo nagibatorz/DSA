@@ -1,15 +1,19 @@
+//DFS Approach
 class Solution {
 
     int[][] directions = new int[][]{{-1, -1}, {-1, 0}, {0, -1}, {1, -1}, {1, 1}, {1, 0}, {0, 1}, {-1, 1}};
+
     public char[][] updateBoard(char[][] board, int[] click) {
         int row = click[0], col = click[1];
         int n = board.length, m = board[0].length;
 
+        //Game over: reveal mine -> return
         if(board[row][col] == 'M'){
             board[row][col] = 'X';
             return board;
         }
 
+        // check if current cell has any adjacent mines and return that count
         int mines = 0;
         for(int[] dir : directions){
             int newR = dir[0] + row, newC = dir[1] + col;
@@ -22,6 +26,7 @@ class Solution {
             return board;
         }
         
+        // If unrevealed blank cell: set to 'B' -> recurse only on empty cells
         board[row][col] = 'B';
         for(int[] dir : directions){
             int newR = dir[0] + row, newC = dir[1] + col;
