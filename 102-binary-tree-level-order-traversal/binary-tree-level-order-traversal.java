@@ -22,7 +22,7 @@ class Solution {
         List<List<Integer>> res = new ArrayList<>();
         while(!q.isEmpty()){
             int n = q.size();
-            List<Integer> level = new ArrayList<>();
+            List<Integer> level = new ArrayList<>(n);
             for(int i = 0; i < n; i++){
                 TreeNode node = q.poll();
                 level.add(node.val);
