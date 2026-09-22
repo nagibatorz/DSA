@@ -1,3 +1,4 @@
+// BFS with a Minimum Eliminations Array and Double-ended Queue
 class Solution {
     public int minimumObstacles(int[][] grid) {
         int n = grid.length, m = grid[0].length;
@@ -23,10 +24,13 @@ class Solution {
                 if(newR >= 0 && newR < n && newC >= 0 && newC < m){
                     int newE = e + grid[newR][newC]; 
 
-                    //Only scan next cell if we have eliminations left and it uses less available eliminations
-                    //no need for else to push ti q because if cell eliminates nothing it will still update the minElim entry because that one is initially inf
+                    //check whether new path eliminates less obstacles
                     if(minElim[newR][newC] > newE){
+                        //update minimum eliminations to reach cell at (newR, newC)
                         minElim[newR][newC] = newE;
+
+                        //if cell is a 1 we add to the back of the q
+                        // if it is a zero to the front
                         if(grid[newR][newC] == 1){
                             q.offerLast(new int[]{newR, newC, newE});
                         } else{
@@ -35,9 +39,7 @@ class Solution {
                     }
                 }
             }
-
         }
-
         return -1;
     }
 }
