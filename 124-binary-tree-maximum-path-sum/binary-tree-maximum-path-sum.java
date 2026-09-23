@@ -32,13 +32,16 @@ class Solution {
         int rightMax = dfs(root.right);
 
         // ignore paths with negative nodes
-        leftMax = Math.max(0, leftMax);
-        rightMax = Math.max(0, rightMax);
+        leftMax = (leftMax > 0) ? leftMax : 0;
+        rightMax = (rightMax > 0) ? rightMax : 0;
 
         //Compute max path sum for this root, if we split
-        res = Math.max(res, root.val + leftMax + rightMax);
+        int currPathSum = root.val + leftMax + rightMax;
+        if(currPathSum > res){
+            res = currPathSum;
+        }
 
         // return path sum for this path if we do not split, extend upstream path
-        return root.val + Math.max(leftMax, rightMax);
+        return root.val + ((leftMax > rightMax) ? leftMax : rightMax);
     }
 }
