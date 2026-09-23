@@ -14,6 +14,7 @@
  * }
  */
 //DFS + compute path as 2 options: split/ no split
+// Eliminated Math.max calls to speed up benchmarking
 class Solution {
 
     private int res;
