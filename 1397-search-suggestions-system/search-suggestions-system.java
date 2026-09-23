@@ -3,18 +3,19 @@ class Solution {
         List<List<String>> res = new ArrayList<>();
         int n = searchWord.length();
         Arrays.sort(products);
-
-        for(int i = 1 ; i <= n; i++){
-            String key = searchWord.substring(0, i);
+        int l = 0, r = products.length - 1;
+        for(int i = 0 ; i < n; i++){
+            char c = searchWord.charAt(i);
             List<String> level = new ArrayList<>();
-            for(String s : products){
-                if(s.length() >= i && s.substring(0, i).equals(key)){
-                    level.add(s);
-                }
-                if(level.size() == 3){
-                    break;
-                }
+            
+            while(l <= r && (products[l].length() <= i || products[l].charAt(i) != c)) l++;
+            while(l <= r && (products[r].length() <= i || products[r].charAt(i) != c)) r--;
+
+            int window = r - l + 1;
+            for(int j = 0; j < Math.min(3, window); j++){
+                level.add(products[j + l]);
             }
+
             res.add(level);
         }
         return res;
