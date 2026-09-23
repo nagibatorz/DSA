@@ -13,6 +13,7 @@
  *     }
  * }
  */
+ // DFS approach + Use long due to root.val constraints
 class Solution {
     public boolean isValidBST(TreeNode root) {
         return dfs(root, Long.MIN_VALUE, Long.MAX_VALUE);
@@ -24,6 +25,8 @@ class Solution {
         if(curr.val <= min || curr.val >= max){
             return false;
         }
+
+        //curr node because the upper bound for left subtree and lower bound for left subtree
         return dfs(curr.left, min, curr.val) && dfs(curr.right, curr.val, max);
     }
 }
