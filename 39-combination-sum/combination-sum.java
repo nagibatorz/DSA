@@ -37,7 +37,10 @@ class Solution { // However Backtracking is more efficient for this problem
             if(candidates[i] > target){
                 break;
             }
+
+            // Use choose -> explore -> unchoose pattern
             soFar.add(candidates[i]);
+            // pass in i since reusing is allowed
             bt(candidates, target - candidates[i], i, soFar, res);
             soFar.remove(soFar.size() - 1);
         }
