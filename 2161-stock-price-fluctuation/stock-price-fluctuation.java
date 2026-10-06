@@ -13,6 +13,7 @@ class StockPrice {
     }
     
     public void update(int timestamp, int price) {
+        //update the number of timestamps with that price
         if(records.containsKey(timestamp)){
             int prevPrice = records.get(timestamp);
             timestamps.put(prevPrice, timestamps.get(prevPrice) - 1);
