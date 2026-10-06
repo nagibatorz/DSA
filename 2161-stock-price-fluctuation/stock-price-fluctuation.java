@@ -1,8 +1,11 @@
 class StockPrice {
-    Map<Integer, Integer> records;
-    TreeMap<Integer, Integer> timestamps;
-    int current;
+    //timestamp -> price
+    private Map<Integer, Integer> records;
 
+    //prices -> number of timestamps with that price
+    private TreeMap<Integer, Integer> timestamps;
+    int current;
+    
     public StockPrice() {
         this.records = new HashMap<>();
         this.timestamps = new TreeMap<>();
@@ -11,13 +14,15 @@ class StockPrice {
     
     public void update(int timestamp, int price) {
         if(records.containsKey(timestamp)){
-            int prev = records.get(timestamp);
-            timestamps.put(prev, timestamps.get(prev) - 1);
-            if(timestamps.get(prev) == 0) timestamps.remove(prev);
+            int prevPrice = records.get(timestamp);
+            timestamps.put(prevPrice, timestamps.get(prevPrice) - 1);
+            if(timestamps.get(prevPrice) == 0) timestamps.remove(prevPrice);
         }
         records.put(timestamp, price);
-        current = Math.max(timestamp, current);
         timestamps.put(price, timestamps.getOrDefault(price, 0) + 1);
+        if(current < timestamp){
+            current = timestamp;
+        }
     }
     
     public int current() {
@@ -25,7 +30,7 @@ class StockPrice {
     }
     
     public int maximum() {
-        return timestamps.lastKey();
+       return timestamps.lastKey();
     }
     
     public int minimum() {
