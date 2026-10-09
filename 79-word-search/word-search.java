@@ -1,47 +1,35 @@
-// Backtracking DFS Optimal
 class Solution {
     public boolean exist(char[][] board, String word) {
-        int n = board.length, m = board[0].length, len = word.length();
-        if(n == 0 || m == 0) return false;
-        if(word.equals("")) return true;
-        char[] wordC = word.toCharArray();
+        int n = board.length, m = board[0].length;
         for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
-                // start recursing if char matches first char in word
-                if(board[i][j] == wordC[0] && dfs(i, j, n, m, board, wordC, 0, len)){
-                    return true;
+                if(board[i][j] == word.charAt(0)){
+                    if(dfs(board, i, j, n, m, new StringBuilder(), word)){
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
 
-    private boolean dfs(int i, int j, int n, int m, char[][] board, char[] wordC, int idx, int len){
-        //check bounds and char equality
-        if(i >= n || i < 0 || j >= m || j < 0 || board[i][j] != wordC[idx]){
+    private boolean dfs(char[][] board, int i, int j, int n, int m, StringBuilder sb, String word){
+        if(sb.length() == word.length()){
+            return sb.toString().equals(word);
+        }
+        if(i < 0 || i >= n || j < 0 || j >= m || board[i][j] == '#'){
             return false;
         }
-
-        //successfully scanned all chars
-        if(idx == len - 1){
-            return true;
-        }
-        
-        //mark as visited
-        char curr = board[i][j];
-        int newIdx = idx + 1;
+        sb.append(""+board[i][j]);
+        char temp = board[i][j];
         board[i][j] = '#';
-
-        // scan neigbors
-        if (dfs(i + 1, j, n, m, board, wordC, newIdx, len) || 
-            dfs(i, j + 1, n, m, board, wordC, newIdx, len) ||
-            dfs(i - 1, j, n, m, board, wordC, newIdx, len) ||
-            dfs(i, j - 1, n, m, board, wordC, newIdx, len)) {
-            
-            return true;
-        }
-
-        board[i][j] = curr;
-        return false;
+        
+        boolean exist = dfs(board, i, j + 1, n, m, sb, word) 
+        || dfs(board, i + 1, j, n, m, sb, word) 
+        || dfs(board, i - 1, j, n, m, sb, word) 
+        || dfs(board, i, j - 1, n, m, sb, word);
+        sb.deleteCharAt(sb.length() - 1);
+        board[i][j] = temp;
+        return exist;
     }
 }
