@@ -1,65 +1,45 @@
-class UndergroundSystem {
+import java.util.Map;
+import java.util.HashMap;
 
-    private Map<Integer, Entry> checkIn; // id -> (startStation, startTime)
-    private Map<String, RouteTotal> totalTime; // (startStation, endStation) -> (totaltime, count of times)
+class UndergroundSystem {
+    private record CheckIn(String station, int time) {}
+
+    private class RouteTotal {
+        long totalTime = 0;
+        int count = 0;
+    }
+
+    private Map<Integer, CheckIn> checkIns;
+    private Map<String, Map<String, RouteTotal>> routeStats;
 
     public UndergroundSystem() {
-        checkIn = new HashMap<>();
-        totalTime = new HashMap<>();
+        checkIns = new HashMap<>();
+        routeStats = new HashMap<>();
     }
     
     public void checkIn(int id, String stationName, int t) {
-        Entry entry = new Entry(stationName, t);
-        checkIn.put(id, entry);
+        checkIns.put(id, new CheckIn(stationName, t));
     }
     
     public void checkOut(int id, String stationName, int t) {
+        CheckIn startPoint = checkIns.remove(id);
 
-        // get data about the starting point and clear out check in map since customer checked out
-        Entry startPoint = checkIn.remove(id);
-
-        // create data for route entry
-        String route = startPoint.station + "->" + stationName;
-        int timeTraveled = t - startPoint.time;
-
-        // update route total info
-        RouteTotal stats = totalTime.computeIfAbsent(route, k -> new RouteTotal(0, 0));
-        stats.totalTime += timeTraveled;
-        stats.totalTravels += 1;
+        // Fetch inner map for the start station, creating it if it doesn't exist
+        Map<String, RouteTotal> endStationMap = routeStats.computeIfAbsent(
+            startPoint.station(), k -> new HashMap<>()
+        );
+        
+        // Fetch or create the RouteTotal for the end station
+        RouteTotal stats = endStationMap.computeIfAbsent(
+            stationName, k -> new RouteTotal()
+        );
+        
+        stats.totalTime += (t - startPoint.time());
+        stats.count += 1;
     }
     
     public double getAverageTime(String startStation, String endStation) {
-        String routeKey = startStation + "->" + endStation;
-        RouteTotal route = totalTime.get(routeKey);
-        return (double) route.totalTime / route.totalTravels;
-    }
-
-
-    class Entry{
-       String station;
-       int time;
-
-       public Entry(String stationName, int time){
-            this.station = stationName;
-            this.time = time;
-       } 
-    }
-
-    class RouteTotal{
-       long totalTime;
-       int totalTravels;
-
-       public RouteTotal(long totalTime, int totalTravels){
-            this.totalTime = totalTime;
-            this.totalTravels = totalTravels;
-       } 
+        RouteTotal stats = routeStats.get(startStation).get(endStation);
+        return (double) stats.totalTime / stats.count;
     }
 }
-
-/**
- * Your UndergroundSystem object will be instantiated and called as such:
- * UndergroundSystem obj = new UndergroundSystem();
- * obj.checkIn(id,stationName,t);
- * obj.checkOut(id,stationName,t);
- * double param_3 = obj.getAverageTime(startStation,endStation);
- */
