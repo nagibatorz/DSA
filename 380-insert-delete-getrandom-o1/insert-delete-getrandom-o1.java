@@ -1,7 +1,11 @@
 class RandomizedSet {
 
     private Random rand = new Random();
+
+    // O(1) values look up
     private Map<Integer, Integer> indexes;
+
+    // O(1) get element at specific index 
     private List<Integer> nums;
 
     public RandomizedSet() {
