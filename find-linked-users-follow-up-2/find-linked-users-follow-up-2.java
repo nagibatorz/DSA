@@ -11,6 +11,8 @@ class Solution {
             nameToPos.put(records[0][i], i);
         }
 
+        //speed up by having two arrays, one for column ids in records and one for weights for given column
+        // speeds up iteration in the helper method
         Map<String, Double> colToWeight = new HashMap<>();
         for(String s : weights){
             int idx = s.indexOf(":");
@@ -19,6 +21,7 @@ class Solution {
             colToWeight.put(colName, weight);
         }
         int idIdx = nameToPos.get("id");
+        // potentially drop this map
         Map<String, Integer> ids = new HashMap<>();
         for(int i = 1; i < records.length; i++){
             ids.put(records[i][idIdx], i);
@@ -30,7 +33,7 @@ class Solution {
         vis[0] = true;
         vis[ids.get(String.valueOf(targetUserId))] = true;
         List<Integer> res = new ArrayList<>();
-        Queue<Integer> q = new LinkedList<>();
+        Dequeue<Integer> q = new ArrayDeque<>();
         q.add(targetUserId);
         while(!q.isEmpty()){
             int id = q.remove();
@@ -38,6 +41,7 @@ class Solution {
             for(int i = 1; i < records.length; i++){
                 if(!vis[i] && isLinked(records[i], curr, threshold, colToWeight, nameToPos)){
                     vis[i] = true;
+                    // if ids map is dropped make the q hold indices whithin records, still add the actual id to res list
                     q.add(Integer.parseInt(records[i][idIdx]));
                     res.add(Integer.parseInt(records[i][idIdx]));
                 }
