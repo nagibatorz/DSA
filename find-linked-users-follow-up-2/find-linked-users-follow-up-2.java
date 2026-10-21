@@ -38,7 +38,7 @@ class Solution {
             for(int i = 1; i < records.length; i++){
                 if(!vis[i] && isLinked(records[i], curr, threshold, colToWeight, nameToPos)){
                     vis[i] = true;
-                    q.add(i);
+                    q.add(Integer.parseInt(records[i][idIdx]));
                     res.add(Integer.parseInt(records[i][idIdx]));
                 }
             }
