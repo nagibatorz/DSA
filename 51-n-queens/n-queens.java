@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 // Backtracking with tracking indexes of columns, positive diagonals and negative diagonals
 class Solution {
     // <col index>
