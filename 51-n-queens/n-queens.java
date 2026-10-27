@@ -34,6 +34,7 @@ class Solution {
                 combination.add(new String(board[i]));
             }
             res.add(combination);
+            return;
         }
         for(int col = 0; col < n; col++){
             if(cols.contains(col) || posDiag.contains(row + col) || negDiag.contains(row - col)){
