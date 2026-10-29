@@ -1,16 +1,13 @@
 class WordDictionary {
 
     TrieNode root;
-    boolean[] hasLength;
 
     public WordDictionary() {
         root = new TrieNode();
-        hasLength = new boolean[505];
     }
 
     public void addWord(String word) {
         TrieNode curr = root;
-        hasLength[word.length()] = true;
         for(int i = 0; i < word.length(); i++){
             int trie = word.charAt(i) - 'a'; // ASCII conversions act as indexes therefore we know what char's TrieNode exists
             if(curr.children[trie] == null){ 
@@ -22,7 +19,6 @@ class WordDictionary {
     }
 
     public boolean search(String word) {
-        if(!hasLength[word.length()]) return false;
         return dfs(0, word.toCharArray(), root);
     }
 
