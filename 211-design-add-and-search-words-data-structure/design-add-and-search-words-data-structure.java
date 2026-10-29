@@ -8,11 +8,12 @@ class WordDictionary {
 
     public void addWord(String word) {
         TrieNode curr = root;
-        for(char c : word.toCharArray()){
-            if(curr.children[c-'a'] == null){ // ASCII conversions act as indexes therefore we know what char's TrieNode exists
-                curr.children[c-'a'] = new TrieNode();
+        for(int i = 0; i < word.length(); i++){
+            int trie = word.charAt(i) - 'a'; // ASCII conversions act as indexes therefore we know what char's TrieNode exists
+            if(curr.children[trie] == null){ 
+                curr.children[trie] = new TrieNode();
             }
-            curr = curr.children[c-'a'];
+            curr = curr.children[trie];
         }
         curr.endOfWord = true;
     }
@@ -37,10 +38,11 @@ class WordDictionary {
                 return false;
             // iterative portion
             } else{
-                if(curr.children[c - 'a'] == null){
+                int trie = c - 'a';
+                if(curr.children[trie] == null){
                     return false;
                 }
-                curr = curr.children[c - 'a'];
+                curr = curr.children[trie];
             }
         }
         return curr.endOfWord;
