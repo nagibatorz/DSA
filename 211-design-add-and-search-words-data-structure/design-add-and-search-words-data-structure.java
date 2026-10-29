@@ -19,15 +19,15 @@ class WordDictionary {
     }
 
     public boolean search(String word) {
-        return dfs(0, word, root);
+        return dfs(0, word.toCharArray(), root);
     }
 
     // method consists of recursive and iterative portion 
     // any method call can enter any portion depending on what current char is
-    private boolean dfs(int idx, String word, TrieNode node){
+    private boolean dfs(int idx, char[] word, TrieNode node){
         TrieNode curr = node;
-        for(int i = idx; i < word.length(); i++){
-            char c = word.charAt(i);
+        for(int i = idx; i < word.length; i++){
+            char c = word[i];
             // recursive portion
             if(c == '.'){
                 for(TrieNode child : curr.children){
