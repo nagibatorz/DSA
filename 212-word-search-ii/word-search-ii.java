@@ -1,3 +1,4 @@
+// Trie + (DFS + Backtracking) + Bottom up TrieNode deletion optimization.
 class Solution {
     public List<String> findWords(char[][] board, String[] words) {
         int n = board.length, m = board[0].length;
