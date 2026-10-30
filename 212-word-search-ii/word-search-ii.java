@@ -34,8 +34,19 @@ class Solution {
         dfs(i, j + 1, next, res, m, n, board);
         dfs(i - 1, j, next, res, m, n, board);
         dfs(i, j - 1, next, res, m, n, board);
-        board[i][j] = c;
+        // Prune the Trie: if 'next' has no remaining words or children, cut it off
+        boolean hasChildren = false;
+        for (TrieNode child : next.children) {
+            if (child != null) {
+                hasChildren = true;
+                break;
+            }
         }
+        if (!hasChildren && next.word == null) {
+            curr.children[c - 'a'] = null;
+        }   
+        board[i][j] = c;
+        }   
     }
 
     class TrieNode{
