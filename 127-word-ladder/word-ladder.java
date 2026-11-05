@@ -27,7 +27,7 @@ class Solution {
         Set<String> vis = new HashSet<>();
         // start with word
         q.add(beginWord);
-        //vis.add(beginWord);
+        vis.add(beginWord);
         int res = 1;
 
         while(!q.isEmpty()){
@@ -45,10 +45,10 @@ class Solution {
                     List<String> neighbors = adj.remove(key);  // the pattern is explored -> remove
                     if(neighbors != null){
                         for(String nei : neighbors){
-                            //if(!vis.contains(nei)){ //  same word can be in differnet patterns so we need to prevent duplicate processing of words too
-                               // vis.add(nei);
+                            if(!vis.contains(nei)){ //  same word can be in differnet patterns so we need to prevent duplicate processing of words too
+                                vis.add(nei);
                                 q.add(nei);
-                            //}
+                            }
                         }
                     }
                 }
