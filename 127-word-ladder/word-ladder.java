@@ -1,37 +1,36 @@
 class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        if(!wordList.contains(endWord) || beginWord.equals(endWord)) return 0;
-        Map<String, List<String>> adj = new HashMap<>();
-        int len = beginWord.length();
+        if(beginWord.length() != endWord.length()){
+            return 0;
+        }
         wordList.add(beginWord);
-
-        for(String w : wordList){
-            for(int j = 0; j < len; j++){
-                // create pattern and use it as key
-                String pattern = w.substring(0, j) + "*" + w.substring(j+1);
-                adj.computeIfAbsent(pattern, k -> new ArrayList<>()).add(w);
+        int len = beginWord.length();
+        boolean present = false;
+        Map<String, List<String>> adj = new HashMap<>();
+        for(String word : wordList){
+            if(word.equals(endWord)) present = true;
+            for(int i = 0; i < len; i++){
+                String key = word.substring(0, i) + "*" + word.substring(i + 1, len);
+                adj.computeIfAbsent(key, k -> new ArrayList<>()).add(word);
             }
         }
-
+        if(!present) return 0;
+        Deque<String> q = new ArrayDeque<>();
         Set<String> vis = new HashSet<>();
-        Queue<String> q = new LinkedList<>();
-        int res = 1;
         q.add(beginWord);
         vis.add(beginWord);
+        int res = 1;
         while(!q.isEmpty()){
             int size = q.size();
-
             for(int i = 0; i < size; i++){
-                String w = q.poll();
-                if(w.equals(endWord)){
-                    return res;
-                }
+                String curr = q.remove();
+                if(curr.equals(endWord)) return res;
                 for(int j = 0; j < len; j++){
-                    String pattern = w.substring(0, j) + "*" + w.substring(j+1);
-                    for(String nei : adj.get(pattern)){
+                    String key = curr.substring(0, j) + "*" + curr.substring(j + 1, len);
+                    for(String nei : adj.get(key)){
                         if(!vis.contains(nei)){
                             vis.add(nei);
-                            q.offer(nei);
+                            q.add(nei);
                         }
                     }
                 }
