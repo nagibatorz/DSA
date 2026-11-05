@@ -1,4 +1,4 @@
-// Layer by layer BFS
+// Layer by layer BFS, bipartite graph
 // Wild card String as keys; * - wild card
 class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
