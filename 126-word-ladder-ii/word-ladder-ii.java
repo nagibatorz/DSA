@@ -79,7 +79,7 @@ class Solution {
         }
 
         // backtrack on all parents of the current node
-        for(String s : dag.get(curr)){
+        for(String s : dag.getOrDefault(curr, Collections.emptyList())){
             path.add(s);
             bt(s, res, path, beginWord);
             path.remove(path.size() - 1);
