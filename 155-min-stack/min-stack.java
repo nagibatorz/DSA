@@ -1,25 +1,26 @@
 class MinStack {
-
-    Deque<Integer> st;
-    Deque<Integer> mins;
+    private Deque<Integer> st;
+    private Deque<Integer> min;
 
     public MinStack() {
         st = new ArrayDeque<>();
-        mins = new ArrayDeque<>();
+        min = new ArrayDeque<>();
     }
     
     public void push(int val) {
         st.push(val);
-        if(mins.isEmpty() || mins.peek() > val){
-            mins.push(val);
-        } else{
-            mins.push(mins.peek());
+        if(min.isEmpty() || val <= min.peek()){
+            min.push(val);
         }
     }
     
     public void pop() {
-        st.pop();
-        mins.pop();
+        if(st.isEmpty()) return;
+        int top = st.pop();
+        if(top == min.peek()){
+            min.pop();
+        }
+
     }
     
     public int top() {
@@ -27,6 +28,6 @@ class MinStack {
     }
     
     public int getMin() {
-        return mins.peek();
+        return min.peek();
     }
 }
