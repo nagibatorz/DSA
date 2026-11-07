@@ -1,3 +1,6 @@
+// BFS + Alphabet Probing + Backtracking -> DFS + Backtracking
+// Alphabet Probing is efficient because maxLength == 5
+// BFS builds out the graph, DFS builds out valid paths for the answer
 class Solution {
     Map<String, List<String>> dag;
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
@@ -5,21 +8,37 @@ class Solution {
         if(beginWord.length() != endWord.length()){
             return new ArrayList<>();
         }
+
         int len = beginWord.length();
+
+        // Children -> parents
+        // allows to build out result using DFS from the endword
         dag = new HashMap<>();
+
+        // Set of words we haven't processed yet
         Set<String> words = new HashSet<>(wordList);
+
+        // Set of words to process at the current layer
         Set<String> currLayer = new HashSet<>();
         currLayer.add(beginWord);
         if(words.contains(beginWord)) words.remove(beginWord);
+
+        // stop exploring if the layer found endWord
         boolean found = false;
         while(!currLayer.isEmpty() && !found){
             Set<String> nextLayer = new HashSet<>();
+
+            // Process Strings at the current layer
             for(String curr : currLayer){
+
+                // Alphabet probing every letter at every index
                 char[] carr = curr.toCharArray();
                 for(int j = 0; j < len; j++){
                     char original = carr[j];
                     for(char c = 'a'; c <= 'z'; c++){
                         carr[j] = c;
+
+                        // Check if in available words -> add an entry
                         String neighbor = new String(carr);
                         if(words.contains(neighbor)){
                             if(neighbor.equals(endWord)) found = true;
@@ -27,15 +46,21 @@ class Solution {
                             nextLayer.add(neighbor);
                         }
                     }
-                    carr[j] = original;
+                    carr[j] = original; // backtrack to original string
                 }
             }
+
+            // remove found words
             words.removeAll(nextLayer);
+
+            // process found nodes in the next iteration
             currLayer = nextLayer;
         }
         
         if(!found) return new ArrayList<>();
 
+        // Start building out the answer from the endWord
+        // Prevents processing deadend nodes since the graph is directed
         List<List<String>> res = new ArrayList<>();
         List<String> start = new ArrayList<>();
         start.add(endWord);
@@ -45,12 +70,15 @@ class Solution {
     }
 
     private void bt(String curr, List<List<String>> res, List<String> path, String beginWord){
+        // Path reached all the way thru -> reverse and add to res
         if(curr.equals(beginWord)){
             List<String> validPath = new ArrayList<>(path);
             Collections.reverse(validPath);
             res.add(validPath);
             return;
         }
+
+        // backtrack on all parents of the current node
         for(String s : dag.getOrDefault(curr, Collections.emptyList())){
             path.add(s);
             bt(s, res, path, beginWord);
