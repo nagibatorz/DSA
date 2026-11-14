@@ -24,20 +24,25 @@ class Node {
 class Solution {
     public Node connect(Node root) {
         if(root == null) return null;
-        Deque<Node> q = new ArrayDeque<>();
-        q.add(root);
+        Node curr = root;
 
-        while(!q.isEmpty()){
-            int size = q.size() - 1;
-            Node first = q.remove();
-            if(first.left != null) q.add(first.left);
-            if(first.right != null) q.add(first.right);
-            for(int i = 0; i < size; i++){
-                first.next = q.remove();
-                first = first.next;
-                if(first.left != null) q.add(first.left);
-                if(first.right != null) q.add(first.right);
+        while(curr != null){
+            // set up next level
+            Node dummy = new Node(0);
+            Node tail = dummy;
+            while(curr != null){
+            if(curr.left != null){
+                tail.next = curr.left;
+                tail = tail.next;
             }
+            if(curr.right != null){
+                tail.next = curr.right;
+                tail = tail.next;
+            }
+            curr = curr.next;
+        }
+
+            curr = dummy.next;
         }
         return root;
     }
