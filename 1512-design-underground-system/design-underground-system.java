@@ -1,7 +1,7 @@
 class UndergroundSystem {
 
     Map<Integer, CheckIn> checkInMap;
-    Map<String, List<Double>> averages;
+    Map<String, Total> averages;
 
     public UndergroundSystem(){
         this.checkInMap = new HashMap<>();
@@ -10,7 +10,7 @@ class UndergroundSystem {
 
     public void checkIn(int id, String stationName, int t){
         if(!checkInMap.containsKey(id)){
-            checkInMap.put(id, new CheckIn((double)t, stationName));
+            checkInMap.put(id, new CheckIn(t, stationName));
         }
     }
 
@@ -18,8 +18,15 @@ class UndergroundSystem {
         if(checkInMap.containsKey(id)){
             CheckIn checkIn = checkInMap.get(id);
             String key = checkIn.stationName + "=" + stationName;
-            double travelTime = (double) t - checkIn.t;
-            averages.computeIfAbsent(key, k -> new ArrayList<>()).add(travelTime);
+            int travelTime = t - checkIn.t;
+            if(averages.containsKey(key)){
+                Total currTotal = averages.get(key);
+                currTotal.totalTime+=travelTime;
+                currTotal.trips+=1;
+            }else{
+                Total currTotal = new Total(travelTime, 1);
+                averages.put(key, currTotal);
+            }
             checkInMap.remove(id);
         }
 
@@ -28,23 +35,28 @@ class UndergroundSystem {
     public double getAverageTime(String startStation, String endStation){
         String key = startStation + "=" + endStation;
         if(!averages.containsKey(key)) return 0.0;
-        List<Double> travelTimes = averages.get(key);
-        double sum = 0;
-        for(Double time : travelTimes){
-            sum += time;
-        }
-        return sum / (double) travelTimes.size();
+        Total tripTotal = averages.get(key);
+        return ((double)tripTotal.totalTime / tripTotal.trips);
     }
 
     class CheckIn{
-        double t;
+        int t;
         String stationName;
 
-        public CheckIn(double t, String stationName){
+        public CheckIn(int t, String stationName){
             this.t = t;
             this.stationName = stationName;
         }
+    }
 
+    class Total{
+        long totalTime;
+        int trips;
+
+        public Total(int totalTime, int trips){
+            this.totalTime = totalTime;
+            this.trips = trips;
+        }
     }
 }
 
