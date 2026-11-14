@@ -1,58 +1,50 @@
 class UndergroundSystem {
 
-    private Map<Integer, Entry> checkIn; // id -> (startStation, startTime)
-    private Map<String, RouteTotal> totalTime; // (startStation, endStation) -> (totaltime, count of times)
+    Map<Integer, CheckIn> checkInMap;
+    Map<String, List<Double>> averages;
 
-    public UndergroundSystem() {
-        checkIn = new HashMap<>();
-        totalTime = new HashMap<>();
-    }
-    
-    public void checkIn(int id, String stationName, int t) {
-        Entry entry = new Entry(stationName, t);
-        checkIn.put(id, entry);
-    }
-    
-    public void checkOut(int id, String stationName, int t) {
-
-        // get data about the starting point and clear out check in map since customer checked out
-        Entry startPoint = checkIn.remove(id);
-
-        // create data for route entry
-        String route = startPoint.station + "->" + stationName;
-        int timeTraveled = t - startPoint.time;
-
-        // update route total info
-        RouteTotal stats = totalTime.computeIfAbsent(route, k -> new RouteTotal(0, 0));
-        stats.totalTime += timeTraveled;
-        stats.totalTravels += 1;
-    }
-    
-    public double getAverageTime(String startStation, String endStation) {
-        String routeKey = startStation + "->" + endStation;
-        RouteTotal route = totalTime.get(routeKey);
-        return (double) route.totalTime / route.totalTravels;
+    public UndergroundSystem(){
+        this.checkInMap = new HashMap<>();
+        this.averages = new HashMap<>();
     }
 
-
-    class Entry{
-       String station;
-       int time;
-
-       public Entry(String stationName, int time){
-            this.station = stationName;
-            this.time = time;
-       } 
+    public void checkIn(int id, String stationName, int t){
+        if(!checkInMap.containsKey(id)){
+            checkInMap.put(id, new CheckIn((double)t, stationName));
+        }
     }
 
-    class RouteTotal{
-       long totalTime;
-       int totalTravels;
+    public void checkOut(int id, String stationName, int t){
+        if(checkInMap.containsKey(id)){
+            CheckIn checkIn = checkInMap.get(id);
+            String key = checkIn.stationName + "=" + stationName;
+            double travelTime = (double) t - checkIn.t;
+            averages.computeIfAbsent(key, k -> new ArrayList<>()).add(travelTime);
+            checkInMap.remove(id);
+        }
 
-       public RouteTotal(long totalTime, int totalTravels){
-            this.totalTime = totalTime;
-            this.totalTravels = totalTravels;
-       } 
+    }
+
+    public double getAverageTime(String startStation, String endStation){
+        String key = startStation + "=" + endStation;
+        if(!averages.containsKey(key)) return 0.0;
+        List<Double> travelTimes = averages.get(key);
+        double sum = 0;
+        for(Double time : travelTimes){
+            sum += time;
+        }
+        return sum / (double) travelTimes.size();
+    }
+
+    class CheckIn{
+        double t;
+        String stationName;
+
+        public CheckIn(double t, String stationName){
+            this.t = t;
+            this.stationName = stationName;
+        }
+
     }
 }
 
