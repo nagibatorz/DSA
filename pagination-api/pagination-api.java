@@ -16,33 +16,30 @@ class ExternalPaginatedApi {
 }
 
 public class PaginationAPI {
-    private ExternalPaginatedApi ext;
-    private List<String> currPage;
-    private int idx;
-    private int pageNum;
+    ExternalPaginatedApi ext; // external object we are using
+    int pageNum; // index within External object to keep track of its state
+    List<String> currPage; // page we currently looking at - prevents refetching on every call
+    int currIdx; // index within currPage
 
 
     public PaginationAPI(ExternalPaginatedApi externalApi) {
         // TODO: Implement PaginationAPI constructor logic.
-        this.ext = externalApi; // extrernal api
-        this.pageNum = 0; // idx of the current page
-        this.currPage = ext.getExternalPaginatedData(pageNum + 1); // current unexhausted page
-        this.idx = 0; // idex within current page
+        this.ext = externalApi;
+        this.pageNum = 1;
+        this.currPage = ext.getExternalPaginatedData(pageNum);
+        this.currIdx = 0;
     }
 
     public List<String> getNext(int n) {
         // TODO: Implement getNext logic.
         List<String> res = new ArrayList<>();
         while(res.size() < n){
-
-            // advance currPage to the next non-empty page if the current one is exhausted
-            while(currPage != null && idx == currPage.size()){
-                pageNum++;
-                currPage = ext.getExternalPaginatedData(pageNum + 1);
-                idx = 0; // new page -> reset index
-                if(currPage == null || currPage.isEmpty()) return res;
+            if(currIdx == currPage.size()){
+                currPage = ext.getExternalPaginatedData(++pageNum);
+                currIdx = 0; // reset currIdx before returning to prevent fututre calls on exhausted object
+                if(currPage.isEmpty()) return res;
             }
-            res.add(currPage.get(idx++));
+            res.add(currPage.get(currIdx++));
         }
         return res;
     }
@@ -135,4 +132,4 @@ public class PaginationAPI {
         System.out.println("Next 3: " + api.getNext(3)); // Expected: ["coffee", "tea", "juice"]
         System.out.println();
     }
-};
+}
