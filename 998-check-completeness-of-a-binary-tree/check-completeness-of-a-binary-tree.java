@@ -13,19 +13,30 @@
  *     }
  * }
  */
+
+ // If we see not a null node after we saw a null node ->
+ // -> nodes are not skewed to the left -> tree is incomplete
 class Solution {
     public boolean isCompleteTree(TreeNode root) {
-        if(root == null) return true;
-        Queue<TreeNode> q = new LinkedList<>();
+        if (root == null) return true;
+        Deque<TreeNode> q = new ArrayDeque<>();
         boolean nullSeen = false;
         q.add(root);
-        while(!q.isEmpty()){
+
+        while (!q.isEmpty()) {
             TreeNode curr = q.remove();
-            if(curr != null){
-                if(nullSeen) return false;
+
+            if (curr.left != null) {
+                if (nullSeen) return false;
                 q.add(curr.left);
+            } else {
+                nullSeen = true;
+            }
+
+            if (curr.right != null) {
+                if (nullSeen) return false;
                 q.add(curr.right);
-            } else{
+            } else {
                 nullSeen = true;
             }
         }
