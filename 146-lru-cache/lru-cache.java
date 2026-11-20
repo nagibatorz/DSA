@@ -1,68 +1,74 @@
 class LRUCache {
+    private Map<Integer, Node> cache;
+    private Node head;
+    private Node tail;
+    private int capacity;
 
-    final Map<Integer, Node> cache;
-    final int capacity;
-    final Node head;
-    final Node tail;
 
+
+   
     public LRUCache(int capacity) {
         this.cache = new HashMap<>();
-        this.capacity = capacity;
         this.head = new Node(0, 0);
         this.tail = new Node(0, 0);
-        // connect doubly pointers
+        this.capacity = capacity;
         head.next = tail;
         tail.prev = head;
     }
     
     public int get(int key) {
-        int res = -1;
-        Node node = cache.get(key);
-        if(node != null){
-            remove(node);
-            add(node);
-            res = node.val;
+        int val = -1;
+        if(cache.containsKey(key)){
+            Node valNode = cache.get(key);
+            val = valNode.val;
+
+            // bump recentness
+            remove(valNode);
+            add(valNode);
         }
-        return res;
+        return val;
     }
     
     public void put(int key, int value) {
-        if(cache.containsKey(key)){ //map contains key -- still mark as most recently used
-            Node node = cache.get(key);
-            remove(node);
-        } else if(cache.size() == capacity){ //remove least recently used
-            cache.remove(tail.prev.key);
-            remove(tail.prev);
+        Node node;
+        if(cache.containsKey(key)){ // key exists -> just change the value
+            node = cache.get(key);
+            node.val = value;
+            remove(node); // remove from the list
+        } else{
+            // cache only growing here
+            if(cache.size() == capacity){
+                cache.remove(tail.prev.key);
+                remove(tail.prev);
+            }
+            node = new Node(key, value);
+            cache.put(key, node);
         }
-        Node newNode = new Node(value, key);
-        cache.put(key, newNode);
-        add(newNode);
+        // bump up recentness / add to the list
+        add(node);
     }
 
-    // These are crucial for simplifying the problem
-    // P.S. we always add to the front, but we might remove any node if we are updating key, value pair
-    private void remove(Node node){
-        Node prev = node.prev;
-        Node next = node.next;
-        prev.next = next;
-        next.prev = prev;
-    }
-
-    private void add(Node node){
-        Node headNext = head.next;
-        node.prev = head;
+    public void add(Node node){
+        // add node to head
+        Node temp = head.next;
         head.next = node;
-        headNext.prev = node;
-        node.next = headNext;
+        temp.prev = node;
+        node.prev = head;
+        node.next = temp;
+    }
+
+    public void remove(Node node){
+        // set pointers to skip given node
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
     }
 
     class Node{
+        int key; // store key for deletion from map
         int val;
-        int key;
         Node prev;
         Node next;
-
-        public Node(int val, int key){
+        public Node(int key, int val){
             this.val = val;
             this.key = key;
         }
