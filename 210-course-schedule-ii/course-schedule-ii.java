@@ -43,40 +43,49 @@
 
 //optimized DS usage:
 class Solution {
+    List<List<Integer>> adj;
+    int[] vis;
+    int idx = 0;
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        List<Integer>[] adj = new ArrayList[numCourses];
-        for (int i = 0; i < numCourses; i++) {
-            adj[i] = new ArrayList<>();
+        // need to add all course without prereqs to the final result
+
+        adj = new ArrayList<>();
+        // build out adjacency list
+        // populate with empty entries to prevent null exception
+        for(int i = 0; i < numCourses; i++){
+            adj.add(new ArrayList<>());
         }
-        for (int[] p : prerequisites) {
-            adj[p[0]].add(p[1]); // course -> prerequisite
+
+        // populate prerequisites into the adjacency list
+        // course -> prerequisite
+        for(int[] pair : prerequisites){
+            adj.get(pair[0]).add(pair[1]);
         }
 
-        int[] state = new int[numCourses]; // 0: unvisited, 1: visiting, 2: visited
-        int[] ans = new int[numCourses];
-
-        //all dfs calls share the same idx
-        int[] idx = new int[]{0};
-
-        for (int i = 0; i < numCourses; i++) {
-            if (state[i] == 0) {
-                if (hasCycle(i, adj, state, ans, idx)) return new int[0];
+        int[] output = new int[numCourses];
+        vis = new int[numCourses];
+        // use DFS to find valid order to take the courses
+        // traverse starting from each node -> mark visited nodes that are reachable from that node
+        for(int i = 0; i < numCourses; i++){
+            if(hasCycleAndProcess(i, output)){
+                return new int[0];
             }
         }
-        return ans;
+        return output;
     }
 
-    private boolean hasCycle(int course, List<Integer>[] adj, int[] state, int[] ans, int[] idx) {
-        if (state[course] == 1) return true;
-        if (state[course] == 2) return false;
-
-        state[course] = 1;
-        for (int pre : adj[course]) {
-            if (hasCycle(pre, adj, state, ans, idx)) return true;
+    private boolean hasCycleAndProcess(int i, int[] output){
+        if(vis[i] == 1) return true;
+        if(vis[i] == 2) return false;
+        vis[i] = 1;
+        for(int pre : adj.get(i)){
+            if(hasCycleAndProcess(pre, output)){
+                return true;
+            }
         }
-
-        state[course] = 2;
-        ans[idx[0]++] = course; // All prerequisites fulfilled, safe to record
+        vis[i] = 2;
+        output[idx] = i;
+        idx++;
         return false;
     }
 }
