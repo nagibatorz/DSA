@@ -43,7 +43,9 @@ class Solution {
         // Top-left computation
         for(int i = 0; i < n; i++){
             for(int j = 0; j < m; j++){
+                // only set compute distance if the cell is 1, since distance from 0 to 0 is 0 and it is the default
                 if(mat[i][j] == 1){
+                    // compare top and left neighboring cells to maxPoss and each other
                     dists[i][j] = (i > 0) ? Math.min(dists[i - 1][j] + 1, maxPoss) : maxPoss;
                     dists[i][j] = (j > 0) ? Math.min(dists[i][j - 1] + 1, dists[i][j]) : dists[i][j];
                 }
@@ -53,7 +55,9 @@ class Solution {
         // bottom-right computation
         for(int i = n - 1; i >= 0; i--){
             for(int j = m - 1; j >= 0; j--){
+                // only set compute distance if the cell is 1, since distance from 0 to 0 is 0 and it is the default
                 if(mat[i][j] == 1){
+                    // compare bottom and right neighboring cells to what was computed in the first loop and each other
                     dists[i][j] = (i < n - 1) ? Math.min(dists[i + 1][j] + 1, dists[i][j]) : dists[i][j];
                     dists[i][j] = (j < m - 1) ? Math.min(dists[i][j + 1] + 1, dists[i][j]) : dists[i][j];
                 }
