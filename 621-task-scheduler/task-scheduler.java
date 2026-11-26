@@ -21,11 +21,10 @@ class Solution {
         for(int i = 24; i >= 0; i--){
             if(count[i] == 0 || idleSlots == 0) break;  // no more tasks to add || all spaces filled, can return length of tasks
 
-            // min is the tie with maxFreq ->
             // if a task has the same frequency as max then the last occurence get prepended in the end
             if(count[i] == maxFreq){
                 idleSlots -= maxFreq - 1;
-            } else{
+            } else{ // fill in idle slots
                 idleSlots -= count[i];
             }
             
