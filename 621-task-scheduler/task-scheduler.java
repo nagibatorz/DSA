@@ -3,18 +3,17 @@ class Solution {
     public int leastInterval(char[] tasks, int n) {
         if(n == 0) return tasks.length;
 
-        int[] freq = new int[26];
-        for(char c : tasks){
-            freq[c - 'A']++;
+        int[] count = new int[26];
+        for(char task : tasks){
+            count[task - 'A']++;
         }
-        Arrays.sort(freq);
-        int maxf = freq[25];
-        int idleTotal = (maxf - 1) * n;
+        Arrays.sort(count);
+        int maxFreq = count[25];
+        int idleSlots = (maxFreq - 1) * n;
         for(int i = 24; i >= 0; i--){
-
-            //exact ties case
-            idleTotal -= Math.min(maxf - 1, freq[i]); //the task doesn't consume all idle slots and goes in the end
+            if(count[i] == 0) break;
+            idleSlots -= Math.min(maxFreq - 1, count[i]);
         }
-        return Math.max(0, idleTotal) + tasks.length;
+        return Math.max(0, idleSlots) + tasks.length;
     }
 }
